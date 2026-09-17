@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avalia+</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#182033}
+header{background:#fff;border-bottom:1px solid #e4e6ee;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}.logo{font-weight:800;font-size:22px;color:#5b4bdb}
+nav button,.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}.btn{background:#5b4bdb;color:#fff}.ghost{background:#eeeafe;color:#5142c5}
+main{max-width:1100px;margin:auto;padding:25px 16px}.hero{background:linear-gradient(135deg,#5b4bdb,#8375ef);color:#fff;border-radius:22px;padding:34px;margin-bottom:22px}.hero h1{font-size:35px;margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}.card{background:#fff;border:1px solid #e4e6ee;border-radius:16px;padding:20px;box-shadow:0 5px 20px #1820330b;margin-bottom:15px}.hidden{display:none}.muted{color:#687386}.stars{color:#f3b83f;font-size:24px}.badge{display:inline-block;background:#eeeafe;color:#5142c5;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d8dce7;border-radius:9px;margin:6px 0 14px;font:inherit}textarea{min-height:95px}label{font-size:14px;font-weight:700}.back{border:0;background:none;color:#5b4bdb;font-weight:700;cursor:pointer;margin-bottom:15px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid #eceef4}.rank{font-weight:800}.notice{background:#fff8df;border:1px solid #f0df9a;padding:12px;border-radius:10px;margin-top:15px;font-size:14px}
+.result{margin-top:18px}
+</style>
+</head>
+<body>
+<header><div class="logo">★ Avalia+</div><nav>
+<button onclick="show('home')">Início</button>
+<button onclick="show('vincular')">Vincular empresa</button>
+<button onclick="show('avaliar')">Avaliar</button>
+<button onclick="show('ranking')">Ranking</button>
+</nav></header>
+
+<main>
+<section id="home">
+<div class="hero"><h1>Avalia+</h1><p>Avalie empresas, descubra os destaques da sua região e acompanhe os rankings por categoria.</p><button class="btn" onclick="show('vincular')">Vincular minha empresa</button></div>
+<div class="grid">
+<div class="card"><h3>📱 QR Code</h3><p class="muted">Cada empresa terá um QR Code próprio para receber avaliações.</p></div>
+<div class="card"><h3>⭐ Avaliações</h3><p class="muted">Clientes avaliam com nota e comentário.</p></div>
+<div class="card"><h3>🏆 Rankings</h3><p class="muted">Os rankings serão calculados por categoria e período.</p></div>
+</div>
+</section>
+
+<section id="vincular" class="hidden">
+<button class="back" onclick="show('home')">← Voltar</button>
+<div class="card"><h2>Vincule sua empresa ao Avalia+</h2>
+<p class="muted">Informe os dados da empresa para iniciar o cadastro.</p>
+<label>Nome da empresa</label><input id="nome" placeholder="Ex.: Restaurante Sabor">
+<label>CNPJ</label><input id="cnpj" placeholder="00.000.000/0001-00" inputmode="numeric">
+<label>Categoria</label><select id="cat"><option>Alimentação</option><option>Moda</option><option>Automotivo</option><option>Lava-jato</option><option>Beleza</option><option>Serviços</option></select>
+<label>Cidade</label><input id="cidade" placeholder="Ex.: São Paulo">
+<label>E-mail de contato</label><input id="email" type="email" placeholder="empresa@email.com">
+<button class="btn" onclick="cadastrar()">Continuar cadastro</button>
+<div id="res" class="hidden result"></div>
+</div>
+</section>
+
+<section id="avaliar" class="hidden">
+<button class="back" onclick="show('home')">← Voltar</button>
+<div class="card"><span class="badge">Página de avaliação</span>
+<h2 id="empresaAval">Sua empresa</h2><p class="muted" id="infoAval">A página será vinculada ao QR Code da empresa.</p>
+<h3>Como foi sua experiência?</h3><label>Nota</label><select id="nota"><option value="5">5 — Excelente</option><option value="4">4 — Muito bom</option><option value="3">3 — Bom</option><option value="2">2 — Regular</option><option value="1">1 — Ruim</option></select>
+<label>Comentário</label><textarea id="comentario" placeholder="Conte sua experiência..."></textarea>
+<button class="btn" onclick="enviar()">Enviar avaliação</button>
+<div id="envio" class="hidden notice"></div></div>
+</section>
+
+<section id="ranking" class="hidden">
+<button class="back" onclick="show('home')">← Voltar</button>
+<div class="card"><h2>🏆 Ranking do mês</h2><p class="muted">O ranking será preenchido automaticamente quando houver avaliações reais.</p>
+<label>Categoria</label><select><option>Alimentação</option><option>Moda</option><option>Automotivo</option><option>Lava-jato</option><option>Beleza</option><option>Serviços</option></select>
+<div class="notice">Ainda não há empresas avaliadas. O ranking está zerado.</div>
+</div></section>
+</main>
+<footer style="text-align:center;color:#687386;padding:20px">Avalia+</footer>
+<script>
+function show(id){document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');scrollTo(0,0)}
+function cadastrar(){
+ const n=document.getElementById('nome').value.trim(), c=document.getElementById('cnpj').value.trim(), cat=document.getElementById('cat').value, city=document.getElementById('cidade').value.trim(), email=document.getElementById('email').value.trim();
+ const r=document.getElementById('res'); r.classList.remove('hidden');
+ if(!n||!c||!city||!email){r.innerHTML='<div class="notice">Preencha todos os campos para continuar.</div>';return}
+ const id='EMP-'+Math.floor(100000+Math.random()*899999);
+ r.innerHTML='<div class="card"><h3>Cadastro iniciado</h3><p><b>'+n+'</b><br>'+c+'<br>'+cat+' • '+city+'</p><p><b>Identificador:</b> '+id+'</p><p class="muted">Na versão publicada, este cadastro será enviado ao banco de dados e, após a validação do CNPJ, o sistema criará o QR Code permanente da empresa.</p></div>';
+}
+function enviar(){const e=document.getElementById('envio');e.classList.remove('hidden');e.textContent='Avaliação registrada no protótipo. Na versão publicada, ela será salva no banco de dados.'}
+</script>
+</body></html>
